@@ -50,13 +50,13 @@ public class Driver {
 		
 		
 		System.out.println("CORRECTNESS: ");
-		if(answer.compareTo(srResult) == 0){
+		if(answer.compareTo(slResult) == 0){
 			System.out.println("\tSingle Threaded Loop     : Correct" + slResult);
 		}else{
 			System.out.println("\tSingle Threaded Loop     : Wrong" + slResult);
 		} 	
 		
-		if(answer.compareTo(slResult) == 0){
+		if(answer.compareTo(srResult) == 0){
 			System.out.println("\tSingle Threaded Recursion: Correct");
 		}else{
 			System.out.println("\tSingle Threaded Recursion: Wrong");
