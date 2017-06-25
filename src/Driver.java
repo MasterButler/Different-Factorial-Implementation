@@ -3,23 +3,32 @@ import java.util.Scanner;
 
 public class Driver {
 
-	public static void main(String[] args){
+	public static void main(String[] args){	
 		BigInteger slResult;
 		BigInteger srResult;
 		BigInteger pResult;
+		BigInteger answer;
 		
 		NanoTimer slTimer = new NanoTimer();
 		NanoTimer srTimer = new NanoTimer();
 		NanoTimer pTimer = new NanoTimer();
+		
+		Runtime runtime;
+		
+		long slMemoryUsed;
+		long srMemoryUsed;
+		long pMemoryUsed;
+		
+		long value = 200000;
+		answer = Factorial.of(value);
 
-		long value = 1;
-
-	
 		System.out.println("STARTING SINGLE-THREADED LOOP ALGORITHM");
 		slTimer.start();
 		slResult = SerialFactorial.factorial(value);
 		slTimer.stop();
 		System.out.println("FINISHED SINGLE-THREADED LOOP ALGORITHM\n\n");
+		
+
 		
 		System.out.println("STARTING SINGLE-THREADED RECURSIVE ALGORITHM");
 		srTimer.start();
@@ -31,57 +40,38 @@ public class Driver {
 		srTimer.stop();
 		System.out.println("FINISHED SINGLE-THREADED RECURSIVE ALGORITHM\n\n");
 		
+		
+		
 		System.out.println("STARTING MULTI-THREADED LOOP ALGORITHM");
 		pTimer.start();
 		pResult = ParallelFactorial.factorial(value);
 		pTimer.stop();
 		System.out.println("FINISHED MULTI-THREADED LOOP ALGORITHM\n\n");
 		
-		if(srResult.compareTo(slResult) == 0){
-			System.out.println("RECURSIVE RESULT HAS THE SAME VALUE AS THE LOOP");
+		
+		System.out.println("CORRECTNESS: ");
+		if(answer.compareTo(srResult) == 0){
+			System.out.println("\tSingle Threaded Loop     : Correct" + slResult);
 		}else{
-			System.out.println("RECURSIVE RESULT STACKOVERFLOW ERROR");
+			System.out.println("\tSingle Threaded Loop     : Wrong" + slResult);
+		} 	
+		
+		if(answer.compareTo(slResult) == 0){
+			System.out.println("\tSingle Threaded Recursion: Correct");
+		}else{
+			System.out.println("\tSingle Threaded Recursion: Wrong");
 		}
 		
-		if(pResult.compareTo(slResult) == 0){
-			System.out.println("MTHREADED RESULT HAS THE SAME VALUE AS THE LOOP");
+		if(answer.compareTo(pResult) == 0){
+			System.out.println("\tMulti Threaded Solution  : Correct");
 		}else{
-			System.out.println("MTHREADED RESULT ERROR");
+			System.out.println("\tMulti Threaded Solution  : Wrong");
 		}
-		System.out.println("\n");
-		System.out.println("Time elapsed for Single Threaded Loop Algorithm\t\t: " + slTimer.getFormattedTimeLapsed());
-		System.out.println("Time elapsed for Single Threaded Recursive Algorithm\t: " + srTimer.getFormattedTimeLapsed());
-		System.out.println("Time elapsed for Multi Threaded Algorithm\t\t: " + pTimer.getFormattedTimeLapsed());
 		
-//
-//		slTimer.start();
-//		
-//		BigInteger slResult = SerialFactorial.factorial(value);
-//		
-//		slTimer.stop();
-//		System.out.println("Result: " + slResult);
-//		System.out.println("Time elapsed for Single Threaded Loop Algorithm\t\t: " + slTimer.getFormattedTimeLapsed());
-//		
-//		
-
-//		
-//		srTimer.start();
-//		
-//		BigInteger srResult = SerialFactorial2.factorial(value);
-//		
-//		srTimer.stop();
-//		System.out.println("Result: " + srResult);
-//		System.out.println("Time elapsed for Single Threaded Recursive Algorithm\t: " + srTimer.getFormattedTimeLapsed());
-//
-		
-//		pTimer.start();
-//		
-//		BigInteger pResult = ParallelFactorial.factorial(value);
-//		
-//		pTimer.stop();
-//		System.out.println("Result: " + pResult);		
-//		System.out.println("Time elapsed for Multi Threaded Algorithm\t\t: " + pTimer.getFormattedTimeLapsed());
-
+		System.out.println("Performance Speed:");
+		System.out.println("\tSingle Threaded Loop     : " + slTimer.getFormattedTimeLapsed());
+		System.out.println("\tSingle Threaded Recursion: " + srTimer.getFormattedTimeLapsed());
+		System.out.println("\tMulti Threaded Solution  : " + pTimer.getFormattedTimeLapsed());
 		
 		
 	}
