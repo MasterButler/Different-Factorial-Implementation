@@ -38,9 +38,12 @@ public class Driver {
 		BigInteger pResult;
 		BigInteger answer;
 		
+		BigInteger cResult;
+		
 		NanoTimer slTimer = new NanoTimer();
 		NanoTimer srTimer = new NanoTimer();
 		NanoTimer pTimer = new NanoTimer();
+		NanoTimer cTimer = new NanoTimer();
 		
 		Runtime runtime;
 		
@@ -48,6 +51,7 @@ public class Driver {
 		double slMemoryUsed;
 		double srMemoryUsed;
 		double pMemoryUsed;
+		double cMemoryUsed;
 		
 		long value = 100000;
 		answer = Factorial.of(value);
@@ -83,6 +87,16 @@ public class Driver {
 		
 		pMemoryUsed = computeMemoryUsed() - (slMemoryUsed + srMemoryUsed + initialMemoryUsed);
 		
+		
+		System.out.println("STARTING CUSTOM MULTI-THREADED LOOP ALGORITHM");
+		cTimer.start();
+		cResult = new ParallelFactorial2().factorial(value, 4);
+		cTimer.stop();
+		System.out.println("FINISHED CUSTOM MULTI-THREADED LOOP ALGORITHM\n\n");
+		
+		cMemoryUsed = computeMemoryUsed() - (slMemoryUsed + srMemoryUsed + pMemoryUsed + initialMemoryUsed);
+		
+		
 		System.out.println("CORRECTNESS: ");
 		if(answer.compareTo(slResult) == 0){
 			System.out.println("\tSingle Threaded Loop     : Correct");
@@ -102,16 +116,25 @@ public class Driver {
 			System.out.println("\tMulti Threaded Solution  : Wrong");
 		}
 		
+		if(answer.compareTo(cResult) == 0){
+			System.out.println("\tMulti Threaded Custom Solution  : Correct" + String.valueOf(cResult));
+		}else{
+			System.out.println("\tMulti Threaded Custom Solution  : Wrong" + String.valueOf(cResult));
+		}
+		
+		
 		System.out.println("Performance Speed:");
 		System.out.println("\tSingle Threaded Loop     : " + slTimer.getFormattedTimeLapsed());
 		System.out.println("\tSingle Threaded Recursion: " + srTimer.getFormattedTimeLapsed());
 		System.out.println("\tMulti Threaded Solution  : " + pTimer.getFormattedTimeLapsed());
+		System.out.println("\tMulti Threaded Custom Solution  : " + cTimer.getFormattedTimeLapsed());
 		
 		DecimalFormat df = new DecimalFormat("#0.000");
 		System.out.println("Memory Usage");
 		System.out.println("\tSingle Threaded Loop     : " + df.format(slMemoryUsed) + " KB");
 		System.out.println("\tSingle Threaded Recursion: " + df.format(srMemoryUsed) + " KB");
 		System.out.println("\tMulti Threaded Solution  : " + df.format(pMemoryUsed) + " KB");
+		System.out.println("\tMulti Threaded Custom Solution  : " + df.format(cMemoryUsed) + " KB");
 		
 	}
 }
