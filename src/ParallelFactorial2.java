@@ -26,18 +26,14 @@ public class ParallelFactorial2 {
 			temp.start();
 		}
 		
-		System.out.println("BEGIN WAITING");
 		while(isFinished.contains(false)) {
-			System.out.println("WAITING");
+			System.out.print("");
 		}
-		
-		System.out.println("MULTIPLYING RESULTS");
 		
 		for(int i = 0; i < results.size(); i++) {
 			this.result = this.result.multiply(results.get(i));
 		}
 		
-		System.out.println("RETURNING RESULTS");
 		return result;
 	}
 	

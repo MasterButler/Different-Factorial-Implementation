@@ -117,9 +117,9 @@ public class Driver {
 		}
 		
 		if(answer.compareTo(cResult) == 0){
-			System.out.println("\tMulti Threaded Custom Solution  : Correct" + String.valueOf(cResult));
+			System.out.println("\tMulti Threaded Custom Solution  : Correct");
 		}else{
-			System.out.println("\tMulti Threaded Custom Solution  : Wrong" + String.valueOf(cResult));
+			System.out.println("\tMulti Threaded Custom Solution  : Wrong");
 		}
 		
 		
