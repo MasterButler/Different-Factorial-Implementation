@@ -1,8 +1,37 @@
 import java.math.BigInteger;
+import java.text.DecimalFormat;
 import java.util.Scanner;
 
 public class Driver {
-
+	private static final long MEGABYTE = 1024L * 1024L;
+	private static final long KILOBYTE = 1024L;
+	
+    public static double bytesToMegabytes(long bytes) {
+        return 1.0 * bytes / MEGABYTE;
+    }
+	
+    public static double bytesToKilobytes(long bytes) {
+        return 1.0 * bytes / KILOBYTE;
+    }
+    
+    /*
+     * The code has been borrowed from http://www.vogella.com/tutorials/JavaPerformance/article.html
+     * The program will only be used for testing purposes and will not be used for other monetary means 
+     * whatsoever.
+     */
+	public static double computeMemoryUsed(){
+		// Get the Java runtime
+        Runtime runtime = Runtime.getRuntime();
+        // Run the garbage collector
+        runtime.gc(); 
+        // Calculate the used memory
+        long memory = runtime.totalMemory() - runtime.freeMemory();
+//        System.out.println("Used memory is bytes: " + memory);
+//        System.out.println("Used memory is kilobytes: " + bytesToKilobytes(memory));
+//        System.out.println("Used memory is megabytes: " + bytesToMegabytes(memory));
+        return bytesToKilobytes(memory);
+	}
+	
 	public static void main(String[] args){	
 		BigInteger slResult;
 		BigInteger srResult;
@@ -15,19 +44,23 @@ public class Driver {
 		
 		Runtime runtime;
 		
-		long slMemoryUsed;
-		long srMemoryUsed;
-		long pMemoryUsed;
+		double initialMemoryUsed;
+		double slMemoryUsed;
+		double srMemoryUsed;
+		double pMemoryUsed;
 		
 		long value = 100000;
 		answer = Factorial.of(value);
 
+		initialMemoryUsed = computeMemoryUsed();
+		
 		System.out.println("STARTING SINGLE-THREADED LOOP ALGORITHM");
 		slTimer.start();
 		slResult = SerialFactorial.factorial(value);
 		slTimer.stop();
 		System.out.println("FINISHED SINGLE-THREADED LOOP ALGORITHM\n\n");
 		
+		slMemoryUsed = computeMemoryUsed() - initialMemoryUsed;
 
 		
 		System.out.println("STARTING SINGLE-THREADED RECURSIVE ALGORITHM");
@@ -40,7 +73,7 @@ public class Driver {
 		srTimer.stop();
 		System.out.println("FINISHED SINGLE-THREADED RECURSIVE ALGORITHM\n\n");
 		
-		
+		srMemoryUsed = computeMemoryUsed() - (slMemoryUsed + initialMemoryUsed);
 		
 		System.out.println("STARTING MULTI-THREADED LOOP ALGORITHM");
 		pTimer.start();
@@ -48,12 +81,13 @@ public class Driver {
 		pTimer.stop();
 		System.out.println("FINISHED MULTI-THREADED LOOP ALGORITHM\n\n");
 		
+		pMemoryUsed = computeMemoryUsed() - (slMemoryUsed + srMemoryUsed + initialMemoryUsed);
 		
 		System.out.println("CORRECTNESS: ");
 		if(answer.compareTo(slResult) == 0){
-			System.out.println("\tSingle Threaded Loop     : Correct" + slResult);
+			System.out.println("\tSingle Threaded Loop     : Correct");
 		}else{
-			System.out.println("\tSingle Threaded Loop     : Wrong" + slResult);
+			System.out.println("\tSingle Threaded Loop     : Wrong");
 		} 	
 		
 		if(answer.compareTo(srResult) == 0){
@@ -73,6 +107,11 @@ public class Driver {
 		System.out.println("\tSingle Threaded Recursion: " + srTimer.getFormattedTimeLapsed());
 		System.out.println("\tMulti Threaded Solution  : " + pTimer.getFormattedTimeLapsed());
 		
+		DecimalFormat df = new DecimalFormat("#0.000");
+		System.out.println("Memory Usage");
+		System.out.println("\tSingle Threaded Loop     : " + df.format(slMemoryUsed) + " KB");
+		System.out.println("\tSingle Threaded Recursion: " + df.format(srMemoryUsed) + " KB");
+		System.out.println("\tMulti Threaded Solution  : " + df.format(pMemoryUsed) + " KB");
 		
 	}
 }
