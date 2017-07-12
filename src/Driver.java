@@ -38,12 +38,16 @@ public class Driver {
 		BigInteger pResult;
 		BigInteger answer;
 		
-		BigInteger cResult;
+		BigInteger c2Result;
+		BigInteger c4Result;
+		BigInteger c8Result;
 		
 		NanoTimer slTimer = new NanoTimer();
 		NanoTimer srTimer = new NanoTimer();
 		NanoTimer pTimer = new NanoTimer();
-		NanoTimer cTimer = new NanoTimer();
+		NanoTimer c2Timer = new NanoTimer();
+		NanoTimer c4Timer = new NanoTimer();
+		NanoTimer c8Timer = new NanoTimer();
 		
 		Runtime runtime;
 		
@@ -51,9 +55,11 @@ public class Driver {
 		double slMemoryUsed;
 		double srMemoryUsed;
 		double pMemoryUsed;
-		double cMemoryUsed;
+		double c2MemoryUsed;
+		double c4MemoryUsed;
+		double c8MemoryUsed;
 		
-		long value = 100000;
+		long value = 1000000;
 		answer = Factorial.of(value);
 
 		initialMemoryUsed = computeMemoryUsed();
@@ -79,22 +85,30 @@ public class Driver {
 		
 		srMemoryUsed = computeMemoryUsed() - (slMemoryUsed + initialMemoryUsed);
 		
-		System.out.println("STARTING MULTI-THREADED LOOP ALGORITHM");
-		pTimer.start();
-		pResult = ParallelFactorial.factorial(value);
-		pTimer.stop();
-		System.out.println("FINISHED MULTI-THREADED LOOP ALGORITHM\n\n");
 		
-		pMemoryUsed = computeMemoryUsed() - (slMemoryUsed + srMemoryUsed + initialMemoryUsed);
+		System.out.println("STARTING 2 thread MULTI-THREADED LOOP ALGORITHM");
+		c2Timer.start();
+		c2Result = new ParallelFactorial2().factorial(value, 2);
+		c2Timer.stop();
+		System.out.println("FINISHED 2 thread MULTI-THREADED LOOP ALGORITHM\n\n");
 		
+		c2MemoryUsed = computeMemoryUsed() - (slMemoryUsed + srMemoryUsed + initialMemoryUsed);
 		
-		System.out.println("STARTING CUSTOM MULTI-THREADED LOOP ALGORITHM");
-		cTimer.start();
-		cResult = new ParallelFactorial2().factorial(value, 4);
-		cTimer.stop();
-		System.out.println("FINISHED CUSTOM MULTI-THREADED LOOP ALGORITHM\n\n");
+		System.out.println("STARTING 4 thread MULTI-THREADED LOOP ALGORITHM");
+		c4Timer.start();
+		c4Result = new ParallelFactorial2().factorial(value, 4);
+		c4Timer.stop();
+		System.out.println("FINISHED 4 cothreadre MULTI-THREADED LOOP ALGORITHM\n\n");
 		
-		cMemoryUsed = computeMemoryUsed() - (slMemoryUsed + srMemoryUsed + pMemoryUsed + initialMemoryUsed);
+		c4MemoryUsed = computeMemoryUsed() - (c2MemoryUsed + slMemoryUsed + srMemoryUsed + initialMemoryUsed);
+		
+		System.out.println("STARTING 8 thread MULTI-THREADED LOOP ALGORITHM");
+		c8Timer.start();
+		c8Result = new ParallelFactorial2().factorial(value, 8);
+		c8Timer.stop();
+		System.out.println("FINISHED 8 thread MULTI-THREADED LOOP ALGORITHM\n\n");
+		
+		c8MemoryUsed = computeMemoryUsed() - (c4MemoryUsed + c2MemoryUsed + slMemoryUsed + srMemoryUsed + initialMemoryUsed);
 		
 		
 		System.out.println("CORRECTNESS: ");
@@ -110,31 +124,39 @@ public class Driver {
 			System.out.println("\tSingle Threaded Recursion: Wrong");
 		}
 		
-		if(answer.compareTo(pResult) == 0){
-			System.out.println("\tMulti Threaded Solution  : Correct");
+		if(answer.compareTo(c2Result) == 0){
+			System.out.println("\tMulti Threaded 2 thread  : Correct");
 		}else{
-			System.out.println("\tMulti Threaded Solution  : Wrong");
+			System.out.println("\tMulti Threaded 2 thread  : Wrong");
 		}
 		
-		if(answer.compareTo(cResult) == 0){
-			System.out.println("\tMulti Threaded Custom Solution  : Correct");
+		if(answer.compareTo(c4Result) == 0){
+			System.out.println("\tMulti Threaded 4 thread  : Correct");
 		}else{
-			System.out.println("\tMulti Threaded Custom Solution  : Wrong");
+			System.out.println("\tMulti Threaded 4 thread  : Wrong");
+		}
+		
+		if(answer.compareTo(c8Result) == 0){
+			System.out.println("\tMulti Threaded 8 thread  : Correct");
+		}else{
+			System.out.println("\tMulti Threaded 8 thread  : Wrong");
 		}
 		
 		
 		System.out.println("Performance Speed:");
 		System.out.println("\tSingle Threaded Loop     : " + slTimer.getFormattedTimeLapsed());
 		System.out.println("\tSingle Threaded Recursion: " + srTimer.getFormattedTimeLapsed());
-		System.out.println("\tMulti Threaded Solution  : " + pTimer.getFormattedTimeLapsed());
-		System.out.println("\tMulti Threaded Custom Solution  : " + cTimer.getFormattedTimeLapsed());
+		System.out.println("\tMulti Threaded 2 thread  : " + c2Timer.getFormattedTimeLapsed());
+		System.out.println("\tMulti Threaded 4 thread  : " + c4Timer.getFormattedTimeLapsed());
+		System.out.println("\tMulti Threaded 8 thread  : " + c8Timer.getFormattedTimeLapsed());
 		
 		DecimalFormat df = new DecimalFormat("#0.000");
 		System.out.println("Memory Usage");
 		System.out.println("\tSingle Threaded Loop     : " + df.format(slMemoryUsed) + " KB");
 		System.out.println("\tSingle Threaded Recursion: " + df.format(srMemoryUsed) + " KB");
-		System.out.println("\tMulti Threaded Solution  : " + df.format(pMemoryUsed) + " KB");
-		System.out.println("\tMulti Threaded Custom Solution  : " + df.format(cMemoryUsed) + " KB");
+		System.out.println("\tMulti Threaded 2 thread  : " + df.format(c2MemoryUsed) + " KB");
+		System.out.println("\tMulti Threaded 4 thread  : " + df.format(c4MemoryUsed) + " KB");
+		System.out.println("\tMulti Threaded 8 thread  : " + df.format(c8MemoryUsed) + " KB");
 		
 	}
 }
