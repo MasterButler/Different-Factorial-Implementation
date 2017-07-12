@@ -1,6 +1,5 @@
 import java.math.BigInteger;
 import java.text.DecimalFormat;
-import java.util.Scanner;
 
 public class Driver {
 	private static final long MEGABYTE = 1024L * 1024L;
@@ -19,16 +18,21 @@ public class Driver {
      * The program will only be used for testing purposes and will not be used for other monetary means 
      * whatsoever.
      */
-	public static double computeMemoryUsed(){
+	public static double computeMemoryUsedBefore(){
 		// Get the Java runtime
         Runtime runtime = Runtime.getRuntime();
         // Run the garbage collector
         runtime.gc(); 
         // Calculate the used memory
         long memory = runtime.totalMemory() - runtime.freeMemory();
-//        System.out.println("Used memory is bytes: " + memory);
-//        System.out.println("Used memory is kilobytes: " + bytesToKilobytes(memory));
-//        System.out.println("Used memory is megabytes: " + bytesToMegabytes(memory));
+        return bytesToKilobytes(memory);
+	}
+	
+	public static double computeMemoryUsedAfter(){
+		// Get the Java runtime
+        Runtime runtime = Runtime.getRuntime();
+        // Calculate the used memory
+        long memory = runtime.totalMemory() - runtime.freeMemory();
         return bytesToKilobytes(memory);
 	}
 	
@@ -59,21 +63,22 @@ public class Driver {
 		double c4MemoryUsed;
 		double c8MemoryUsed;
 		
-		long value = 1000000;
+		long value = 100000;
 		answer = Factorial.of(value);
 
-		initialMemoryUsed = computeMemoryUsed();
-		
 		System.out.println("STARTING SINGLE-THREADED LOOP ALGORITHM");
+		initialMemoryUsed = computeMemoryUsedBefore();
+		
 		slTimer.start();
 		slResult = SerialFactorial.factorial(value);
 		slTimer.stop();
-		System.out.println("FINISHED SINGLE-THREADED LOOP ALGORITHM\n\n");
 		
-		slMemoryUsed = computeMemoryUsed() - initialMemoryUsed;
+		slMemoryUsed = computeMemoryUsedAfter() - initialMemoryUsed;
+		System.out.println("FINISHED SINGLE-THREADED LOOP ALGORITHM\n\n");
 
 		
 		System.out.println("STARTING SINGLE-THREADED RECURSIVE ALGORITHM");
+		initialMemoryUsed = computeMemoryUsedBefore();
 		srTimer.start();
 		try{
 			srResult = SerialFactorial2.factorial(value);	
@@ -81,34 +86,41 @@ public class Driver {
 			srResult = BigInteger.ZERO;
 		}
 		srTimer.stop();
-		System.out.println("FINISHED SINGLE-THREADED RECURSIVE ALGORITHM\n\n");
 		
-		srMemoryUsed = computeMemoryUsed() - (slMemoryUsed + initialMemoryUsed);
+		srMemoryUsed = computeMemoryUsedAfter() - initialMemoryUsed;
+		System.out.println("FINISHED SINGLE-THREADED RECURSIVE ALGORITHM\n\n");
 		
 		
 		System.out.println("STARTING 2 thread MULTI-THREADED LOOP ALGORITHM");
+		initialMemoryUsed = computeMemoryUsedBefore();
+		
 		c2Timer.start();
 		c2Result = new ParallelFactorial2().factorial(value, 2);
 		c2Timer.stop();
+		
+		c2MemoryUsed = computeMemoryUsedAfter() - initialMemoryUsed;
 		System.out.println("FINISHED 2 thread MULTI-THREADED LOOP ALGORITHM\n\n");
 		
-		c2MemoryUsed = computeMemoryUsed() - (slMemoryUsed + srMemoryUsed + initialMemoryUsed);
 		
 		System.out.println("STARTING 4 thread MULTI-THREADED LOOP ALGORITHM");
+		initialMemoryUsed = computeMemoryUsedBefore();
+		
 		c4Timer.start();
 		c4Result = new ParallelFactorial2().factorial(value, 4);
 		c4Timer.stop();
+		
+		c4MemoryUsed = computeMemoryUsedAfter() - initialMemoryUsed;
 		System.out.println("FINISHED 4 cothreadre MULTI-THREADED LOOP ALGORITHM\n\n");
 		
-		c4MemoryUsed = computeMemoryUsed() - (c2MemoryUsed + slMemoryUsed + srMemoryUsed + initialMemoryUsed);
-		
 		System.out.println("STARTING 8 thread MULTI-THREADED LOOP ALGORITHM");
+		initialMemoryUsed = computeMemoryUsedBefore();
+		
 		c8Timer.start();
 		c8Result = new ParallelFactorial2().factorial(value, 8);
 		c8Timer.stop();
-		System.out.println("FINISHED 8 thread MULTI-THREADED LOOP ALGORITHM\n\n");
 		
-		c8MemoryUsed = computeMemoryUsed() - (c4MemoryUsed + c2MemoryUsed + slMemoryUsed + srMemoryUsed + initialMemoryUsed);
+		c8MemoryUsed = computeMemoryUsedAfter() - initialMemoryUsed;
+		System.out.println("FINISHED 8 thread MULTI-THREADED LOOP ALGORITHM\n\n");
 		
 		
 		System.out.println("CORRECTNESS: ");
